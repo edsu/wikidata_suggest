@@ -4,7 +4,7 @@
 your data against [Wikidata](https://wikidata.org). First you'll want to
 install:
 
-    pip install wikidata_suggest
+    % pip install wikidata_suggest
 
 Once you've installed it you will get a command line tool `wd`:
 
