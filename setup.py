@@ -2,7 +2,7 @@ from setuptools import setup, Command
 
 setup(
     name = 'wikidata_suggest',
-    version = '0.0.2',
+    version = '0.0.3',
     url = 'http://github.com/edsu/wikidata_suggest',
     author = 'Ed Summers',
     author_email = 'ehs@pobox.com',
