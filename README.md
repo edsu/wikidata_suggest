@@ -2,14 +2,13 @@
 
 `wikidata_suggest` is a simple command line tool for interactively reconciling 
 your data against [Wikidata](https://wikidata.org). Once you've installed it
-you will get a command line tool `wd` for querying Wikidata, which lets you do 
-this:
+you will get a command line tool `wd`:
 
 ![](http://edsu.github.io/wikidata_suggest/images/screenshot1.png)
 
-If nothing is found at Wikidata `wd` will go and look for a Wikipedia result in
-the first page of results at Google, and give you an opportunity to use that
-instead.
+If nothing is found at Wikidata `wd` will automatically go and look for a 
+Wikipedia result in the first page of results at Google, and give you an 
+opportunity to use that instead.
 
 ![](http://edsu.github.io/wikidata_suggest/images/screenshot2.png)
 
