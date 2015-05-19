@@ -3,14 +3,18 @@
 import re
 import sys
 import json
+import time
 import requests
 
 from colorama import Fore, Style, init
 
+cache = {}
 
+def suggest(orig_name):
+    name = orig_name
+    if name in cache:
+        return cache[name]
 
-
-def suggest(name):
     init()
 
     while True:
@@ -20,20 +24,25 @@ def suggest(name):
         print
 
         suggestions = _wikidata(name)
-        google_suggestion = _google(name)
 
         count = 0
         for s in suggestions['search']:
             count += 1
             label = s.get('label', '')
             description = s.get('description', '')
-            print(Fore.BLUE + str(count) + ')' + ' ' + Style.BRIGHT + label + ': ' + description + Fore.RESET)
+            print(Fore.BLUE + str(count) + ')' + ' ' + Style.BRIGHT + label),
+            if description:
+                print(' - ' + description),
+            print(Fore.RESET)
 
-        if google_suggestion and google_suggestion.lower() != name.lower():
-            print(Fore.MAGENTA + 'G)' + ' google suggests: ' + google_suggestion + Fore.RESET)
+        gs = None
+        if count == 0:
+            gs = _google(name)
+            if gs:
+                print(Fore.MAGENTA + 'G)' + ' google suggests: ' + gs + Fore.RESET)
 
         print(Fore.GREEN + 'N) none')
-        print(Fore.GREEN + 'O) other')
+        print(Fore.YELLOW + 'O) other')
         print(Fore.RED + 'Q) quit')
         print(Style.RESET_ALL)
 
@@ -45,9 +54,11 @@ def suggest(name):
 
         choice = choice.upper()
         if re.match('^\d+$', choice):
-            return suggestions['search'][int(choice)-1]
-        elif choice[0] == "G": 
-            name = google_suggestion
+            r = suggestions['search'][int(choice)-1]
+            cache[orig_name] = r
+            return r
+        elif gs and choice[0] == "G": 
+            name = gs
         elif choice[0] == "O":
             name = raw_input("Lookup: ")
         elif choice[0] == "N":
@@ -69,11 +80,14 @@ def _wikidata(name):
         return requests.get(url, params=params).json()
 
 
-def _google(name):
+def _google(name, sleep=1):
     url = 'http://ajax.googleapis.com/ajax/services/search/web'
-    ua = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/27.0.1453.116 Safari/537.36'}
+    ua = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2311.152 Safari/537.36'}
     params = {'v': '1.0', 'q': name}
     response = requests.get(url, params=params, headers=ua).json()
+    if response["responseStatus"] != 200:
+        time.sleep(sleep)
+        return _google(name, sleep + 5)
     for result in response['responseData']['results']:
         if 'wikipedia.org/wiki/' in result['unescapedUrl']:
             parts = [s.strip() for s in result['titleNoFormatting'].split('-')]
