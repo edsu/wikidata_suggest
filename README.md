@@ -1,8 +1,12 @@
 # wikidata_suggest
 
 `wikidata_suggest` is a simple command line tool for interactively reconciling 
-your data against [Wikidata](https://wikidata.org). Once you've installed it
-you will get a command line tool `wd`:
+your data against [Wikidata](https://wikidata.org). First you'll want to
+install:
+
+    pip install wikidata_suggest
+
+Once you've installed it you will get a command line tool `wd`:
 
 ![](http://edsu.github.io/wikidata_suggest/images/screenshot1.png)
 
