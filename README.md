@@ -2,20 +2,21 @@
 
 `wikidata_suggest` is a simple command line tool for interactively reconciling 
 your data against [Wikidata](https://wikidata.org). Once you've installed it
-you will get a command line tool `wd` for querying Wikidata, which lets you 
-look up something:
+you will get a command line tool `wd` for querying Wikidata, which lets you do 
+this:
 
 ![](http://edsu.github.io/wikidata_suggest/images/screenshot1.png)
 
-If nothing is found at Wikidata it will go and look for a Wikipedia result in
+If nothing is found at Wikidata `wd` will go and look for a Wikipedia result in
 the first page of results at Google, and give you an opportunity to use that
 instead.
 
 ![](http://edsu.github.io/wikidata_suggest/images/screenshot2.png)
 
-Most likely though you will want to use wikidata_suggest as a little data
+Most likely you will want to use wikidata_suggest as a little data 
 cleansing/augmentation library. For example if you have a CSV spreadsheet 
-that has an *author* column that you'd like to link up to Wikidata.
+that has an *author* column that you'd like to link up to Wikidata, you 
+can do something like this:
 
 ```python
 
