@@ -5,9 +5,13 @@ your data against [Wikidata](https://wikidata.org). Once you've installed it
 you will get a command line tool `wd` for querying Wikidata, which lets you 
 look up something:
 
+![](http://edsu.github.io/wikidata_suggest/images/screenshot1.png)
+
 If nothing is found at Wikidata it will go and look for a Wikipedia result in
 the first page of results at Google, and give you an opportunity to use that
 instead.
+
+![](http://edsu.github.io/wikidata_suggest/images/screenshot2.png)
 
 Most likely though you will want to use wikidata_suggest as a little data
 cleansing/augmentation library. For example if you have a CSV spreadsheet 
@@ -22,13 +26,25 @@ from wikidata_suggest import suggest
 reader = csv.reader(open("data.csv"))
 writer = csv.writer(open("new_data.csv", "wb"))
 
+# read the csv 
 for row in reader:
+
   # column 2 has author names
-  wd = suggest(row[1])
-  if wd:
-    row.append(wd["id"])
+  author = row[1]
+
+  # drop into interactive session
+  wikidata = suggest(author)
+
+  if wikidata:
+    row.append(wikidata["id"])
   else:
     row.append(None)
+  
+  # write our new row 
+  writer.writerow(row)
+
+reader.close()
+writer.close()
 ```
 
 
