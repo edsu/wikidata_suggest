@@ -29,7 +29,8 @@ def suggest(orig_name):
         for s in suggestions['search']:
             count += 1
             label = s.get('label', '')
-            description = s.get('description', '')
+            description = s.get('description', 'https:' + s['url'])
+
             print(Fore.BLUE + str(count) + ')' + ' ' + Style.BRIGHT + label),
             if description:
                 print(' - ' + description),
@@ -75,7 +76,8 @@ def _wikidata(name):
             "format": "json",
             "language": "en",
             "type": "item",
-            "continue": "0"
+            "continue": "0",
+            "limit": "25"
         }
         return requests.get(url, params=params).json()
 
@@ -91,7 +93,10 @@ def _google(name, sleep=1):
     for result in response['responseData']['results']:
         if 'wikipedia.org/wiki/' in result['unescapedUrl']:
             parts = [s.strip() for s in result['titleNoFormatting'].split('-')]
-            return parts[0]
+            # remove parenthetical content
+            name = parts[0]
+            name = re.sub(' \(.+\)', '', name)
+            return name
     return None
 
 
