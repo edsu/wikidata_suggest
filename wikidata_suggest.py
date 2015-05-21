@@ -90,7 +90,7 @@ def _google(name, sleep=1):
     if response["responseStatus"] != 200:
         print "received error (%s) from google, waiting %s seconds" % (response["responseStatus"], sleep)
         time.sleep(sleep)
-        return _google(name, sleep + 5)
+        return _google(name, sleep * 2)
     for result in response['responseData']['results']:
         if 'wikipedia.org/wiki/' in result['unescapedUrl']:
             parts = [s.strip() for s in result['titleNoFormatting'].split(' - ')]
