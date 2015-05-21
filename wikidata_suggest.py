@@ -88,11 +88,12 @@ def _google(name, sleep=1):
     params = {'v': '1.0', 'q': name}
     response = requests.get(url, params=params, headers=ua).json()
     if response["responseStatus"] != 200:
+        print "received error (%s) from google, waiting %s seconds" % (response["responseStatus"], sleep)
         time.sleep(sleep)
         return _google(name, sleep + 5)
     for result in response['responseData']['results']:
         if 'wikipedia.org/wiki/' in result['unescapedUrl']:
-            parts = [s.strip() for s in result['titleNoFormatting'].split('-')]
+            parts = [s.strip() for s in result['titleNoFormatting'].split(' - ')]
             # remove parenthetical content
             name = parts[0]
             name = re.sub(' \(.+\)', '', name)
