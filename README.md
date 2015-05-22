@@ -12,11 +12,6 @@ Once you've installed it you will get a command line tool `wd`:
 
 ![](http://edsu.github.io/wikidata_suggest/images/screenshot1.png)
 
-If nothing is found at Wikidata `wd` will automatically go and look for a 
-Wikipedia result, and give you an opportunity to use that instead.
-
-![](http://edsu.github.io/wikidata_suggest/images/screenshot2.png)
-
 Most likely you will want to use wikidata_suggest as a little data 
 cleansing/augmentation library. For example if you have a CSV spreadsheet 
 that has an *author* column that you'd like to link up to Wikidata, you 
