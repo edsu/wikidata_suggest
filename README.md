@@ -29,19 +29,19 @@ writer = csv.writer(open("new_data.csv", "wb"))
 # read the csv 
 for row in reader:
 
-  # column 2 has author names
-  author = row[1]
+    # column 2 has author names
+    author = row[1]
 
-  # drop into interactive session
-  wikidata = suggest(author)
+    # drop into interactive session
+    wikidata = suggest(author)
 
-  if wikidata:
-    row.append(wikidata["id"])
-  else:
-    row.append(None)
+    if wikidata:
+        row.append(wikidata["id"])
+    else:
+        row.append(None)
   
-  # write our new row 
-  writer.writerow(row)
+    # write our new row 
+    writer.writerow(row)
 
 reader.close()
 writer.close()
