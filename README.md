@@ -1,5 +1,7 @@
 # wikidata_suggest
 
+[![Build Status](https://secure.travis-ci.org/edsu/wikidata_suggest.png)](http://travis-ci.org/edsu/wikidata_suggest)
+
 `wikidata_suggest` is a simple command line tool for interactively reconciling 
 your data against [Wikidata](https://wikidata.org). First you'll want to
 install:
@@ -11,8 +13,7 @@ Once you've installed it you will get a command line tool `wd`:
 ![](http://edsu.github.io/wikidata_suggest/images/screenshot1.png)
 
 If nothing is found at Wikidata `wd` will automatically go and look for a 
-Wikipedia result in the first page of results at Google, and give you an 
-opportunity to use that instead.
+Wikipedia result, and give you an opportunity to use that instead.
 
 ![](http://edsu.github.io/wikidata_suggest/images/screenshot2.png)
 

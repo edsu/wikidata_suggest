@@ -11,7 +11,12 @@ from colorama import Fore, Style, init
 cache = {}
 
 def suggest(orig_name):
-    name = orig_name
+
+    name = orig_name.strip()
+
+    if name == None or name == "":
+        return None
+
     if name in cache:
         return cache[name]
 
@@ -20,13 +25,14 @@ def suggest(orig_name):
     while True:
 
         print
-        print(Fore.RED + name + Style.RESET_ALL)
+        print(Fore.RED + 'Search: ' + name + Style.RESET_ALL)
         print
 
-        suggestions = _wikidata(name)
+        # print wikidata suggestions
+        wd_sug = _wikidata(name)
 
         count = 0
-        for s in suggestions['search']:
+        for s in wd_sug['search']:
             count += 1
             label = s.get('label', '')
             description = s.get('description', 'https:' + s['url'])
@@ -36,11 +42,10 @@ def suggest(orig_name):
                 print(' - ' + description),
             print(Fore.RESET)
 
-        gs = None
-        if count == 0:
-            gs = _google(name)
-            if gs:
-                print(Fore.MAGENTA + 'G)' + ' google suggests: ' + gs + Fore.RESET)
+        # print wikipedia suggestions
+        wp_sug = _wikipedia(name)
+        if wp_sug:
+            print(Fore.MAGENTA + 'W) Wikipedia suggests %s' % wp_sug + Fore.RESET)
 
         print(Fore.GREEN + 'N) none')
         print(Fore.YELLOW + 'O) other')
@@ -55,14 +60,17 @@ def suggest(orig_name):
 
         choice = choice.upper()
         if re.match('^\d+$', choice):
-            r = suggestions['search'][int(choice)-1]
+            r = wd_sug['search'][int(choice)-1]
             cache[orig_name] = r
+            cache[name] = r
             return r
-        elif gs and choice[0] == "G": 
-            name = gs
+        elif wp_sug and choice[0] == "W": 
+            name = wp_sug
         elif choice[0] == "O":
             name = raw_input("Lookup: ")
         elif choice[0] == "N":
+            cache[orig_name] = None
+            cache[name] = None
             return None
         elif choice[0] == "Q":
             raise Quit()
@@ -77,29 +85,28 @@ def _wikidata(name):
             "language": "en",
             "type": "item",
             "continue": "0",
-            "limit": "25"
+            "limit": "10"
         }
         return requests.get(url, params=params).json()
 
 
-def _google(name, sleep=1):
-    url = 'http://ajax.googleapis.com/ajax/services/search/web'
-    ua = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2311.152 Safari/537.36'}
-    params = {'v': '1.0', 'q': name}
-    response = requests.get(url, params=params, headers=ua).json()
-    if response["responseStatus"] != 200:
-        print "received error (%s) from google, waiting %s seconds" % (response["responseStatus"], sleep)
-        time.sleep(sleep)
-        return _google(name, sleep * 2)
-    for result in response['responseData']['results']:
-        if 'wikipedia.org/wiki/' in result['unescapedUrl']:
-            parts = [s.strip() for s in result['titleNoFormatting'].split(' - ')]
-            # remove parenthetical content
-            name = parts[0]
-            name = re.sub(' \(.+\)', '', name)
-            return name
-    return None
-
+def _wikipedia(name, lang='en'):
+    url = "https://%s.wikipedia.org/w/api.php" % lang
+    params = {
+        "action": "query",
+        "list": "search",
+        "format": "json",
+        "srnamespace": "0",
+        "srsearch": name
+    }
+    sug = None
+    results = requests.get(url, params=params).json()
+    if len(results['query']['search']) > 0:
+        sug = results['query']['search'][0]['title']
+    elif 'suggestion' in results['query']['searchinfo'] and \
+            name != results['query']['searchinfo']['suggestion']:
+        sug = _wikipedia(results['query']['searchinfo']['suggestion'], lang)
+    return sug
 
 class Quit(Exception):
     pass
