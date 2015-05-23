@@ -15,7 +15,7 @@ class PyTest(Command):
 
 setup(
     name = 'wikidata_suggest',
-    version = '0.0.5',
+    version = '0.0.6',
     url = 'http://github.com/edsu/wikidata_suggest',
     author = 'Ed Summers',
     author_email = 'ehs@pobox.com',
